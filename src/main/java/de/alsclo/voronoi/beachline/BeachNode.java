@@ -7,5 +7,8 @@ public abstract class BeachNode {
 
     private InnerBeachNode parent;
 
-    public abstract BeachNode insertArc(double siteX, double siteY);
+    public abstract LeafBeachNode insertArc(double siteX, double siteY);
+
+    public abstract LeafBeachNode getLeftmostLeaf();
+    public abstract LeafBeachNode getRightmostLeaf();
 }

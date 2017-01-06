@@ -3,13 +3,20 @@ package de.alsclo.voronoi.beachline;
 
 public class Beachline {
 
-    private BeachNode root = null;
+    private InnerBeachNode rootContainer = new InnerBeachNode();
 
-    public BeachNode insertArc(double siteX, double siteY) {
+    public LeafBeachNode insertArc(double siteX, double siteY) {
+        BeachNode root = rootContainer.getLeftChild();
         if (root != null) {
             return root.insertArc(siteX, siteY);
         } else {
-            return root = new LeafBeachNode(siteX, siteY);
+            LeafBeachNode l = new LeafBeachNode(siteX, siteY);
+            rootContainer.setLeftChild(l);
+            return l;
         }
+    }
+
+    BeachNode getRoot() {
+        return rootContainer.getLeftChild();
     }
 }

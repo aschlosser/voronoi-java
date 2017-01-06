@@ -8,6 +8,13 @@
     <name>voronoi-java</name>
     <url>https://github.com/aschlosser/voronoi-java</url>
 
+    <repositories>
+        <repository>
+            <id>central</id>
+            <url>https://repo1.maven.org/maven2/</url>
+        </repository>
+    </repositories>
+
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
