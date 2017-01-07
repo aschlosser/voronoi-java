@@ -1,6 +1,6 @@
 package de.alsclo.voronoi;
 
-import de.alsclo.voronoi.util.Point;
+import de.alsclo.voronoi.graph.Point;
 import lombok.val;
 import org.junit.Test;
 

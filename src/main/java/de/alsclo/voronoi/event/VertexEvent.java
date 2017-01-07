@@ -2,14 +2,14 @@ package de.alsclo.voronoi.event;
 
 import de.alsclo.voronoi.beachline.Beachline;
 import de.alsclo.voronoi.beachline.LeafBeachNode;
-import de.alsclo.voronoi.util.Point;
-
-import static de.alsclo.voronoi.util.Math.sq;
-import static java.lang.Math.sqrt;
+import de.alsclo.voronoi.graph.Graph;
+import de.alsclo.voronoi.graph.Point;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Optional;
+
+import static de.alsclo.voronoi.Math.sq;
+import static java.lang.Math.sqrt;
 
 public class VertexEvent extends Event {
 
@@ -31,7 +31,7 @@ public class VertexEvent extends Event {
     }
 
     @Override
-    public Collection<Event> handle(Beachline beachline) {
+    public Collection<Event> handle(Beachline beachline, Graph graph) {
         return Collections.emptyList();
     }
 

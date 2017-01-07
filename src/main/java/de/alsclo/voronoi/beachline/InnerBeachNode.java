@@ -1,9 +1,10 @@
 package de.alsclo.voronoi.beachline;
 
-import static de.alsclo.voronoi.util.Math.sq;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+
+import static de.alsclo.voronoi.Math.sq;
 
 @Getter
 @ToString @EqualsAndHashCode(callSuper = false)
@@ -22,7 +23,7 @@ public class InnerBeachNode extends BeachNode {
     }
 
     @Override
-    public LeafBeachNode insertArc(double siteX, double siteY) {
+    public InsertionResult insertArc(double siteX, double siteY) {
         // Find leafs represented by this inner node
         LeafBeachNode l = leftChild.getRightmostLeaf();
         LeafBeachNode r = rightChild.getLeftmostLeaf();

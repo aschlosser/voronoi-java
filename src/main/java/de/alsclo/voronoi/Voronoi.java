@@ -3,7 +3,8 @@ package de.alsclo.voronoi;
 import de.alsclo.voronoi.beachline.Beachline;
 import de.alsclo.voronoi.event.Event;
 import de.alsclo.voronoi.event.SiteEvent;
-import de.alsclo.voronoi.util.Point;
+import de.alsclo.voronoi.graph.Graph;
+import de.alsclo.voronoi.graph.Point;
 import lombok.val;
 
 import java.util.Collection;
@@ -18,9 +19,9 @@ public class Voronoi {
         points.stream().map(SiteEvent::new).forEach(queue::offer);
 
         val beachline = new Beachline();
-
+        val graph = new Graph();
         while(!queue.isEmpty()) {
-            queue.poll().handle(beachline).forEach(queue::add);
+            queue.poll().handle(beachline, graph).forEach(queue::add);
         }
     }
 

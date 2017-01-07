@@ -23,7 +23,7 @@ public class LeafBeachNode extends BeachNode {
     }
 
     @Override
-    public LeafBeachNode insertArc(double newSiteX, double newSiteY) {
+    public InsertionResult insertArc(double newSiteX, double newSiteY) {
         val replacement = new InnerBeachNode();
         val newLeaf = new LeafBeachNode(newSiteX, newSiteY);
         val median = new InnerBeachNode();
@@ -43,7 +43,7 @@ public class LeafBeachNode extends BeachNode {
         } else {
             getParent().setRightChild(replacement);
         }
-        return newLeaf;
+        return new InsertionResult(Optional.of(this), newLeaf);
     }
 
     @Override
@@ -56,7 +56,7 @@ public class LeafBeachNode extends BeachNode {
         return this;
     }
 
-    public Optional<LeafBeachNode> getLeftNeightbor() {
+    public Optional<LeafBeachNode> getLeftNeighbor() {
         InnerBeachNode current = getParent();
         BeachNode child = this;
         while(current.getParent() != null) {
@@ -70,7 +70,7 @@ public class LeafBeachNode extends BeachNode {
         return Optional.empty();
     }
 
-    public Optional<LeafBeachNode> getRightNeightbor() {
+    public Optional<LeafBeachNode> getRightNeighbor() {
         InnerBeachNode current = getParent();
         BeachNode child = this;
         while(current.getParent() != null) {

@@ -1,6 +1,7 @@
 package de.alsclo.voronoi.event;
 
 import de.alsclo.voronoi.beachline.Beachline;
+import de.alsclo.voronoi.graph.Graph;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -17,5 +18,5 @@ public abstract class Event implements Comparable<Event>{
         return y > o.y ? -1 : 1;
     }
 
-    public abstract Collection<Event> handle(Beachline beachline);
+    public abstract Collection<Event> handle(Beachline beachline, Graph graph);
 }

@@ -11,9 +11,9 @@ public class BeachlineTests {
     public void testInsert() {
         Beachline bl = new Beachline();
         assertNull(bl.getRoot());
-        LeafBeachNode root = bl.insertArc(0, 0);
+        LeafBeachNode root = bl.insertArc(0, 0).newLeaf;
         assertEquals(root, bl.getRoot());
-        LeafBeachNode first = bl.insertArc(0.5, 4);
+        LeafBeachNode first = bl.insertArc(0.5, 4).newLeaf;
         assertNotEquals(root, bl.getRoot());
         assertTrue(bl.getRoot() instanceof InnerBeachNode);
         InnerBeachNode newRoot = (InnerBeachNode) bl.getRoot();
@@ -39,14 +39,14 @@ public class BeachlineTests {
         val l4 = new LeafBeachNode(4, 0);
         bl.setRoot(new InnerBeachNode(new InnerBeachNode(l1, l2), new InnerBeachNode(l3, l4)));
 
-        assertFalse(l1.getLeftNeightbor().isPresent());
-        assertFalse(l4.getRightNeightbor().isPresent());
-        assertTrue(l1.getRightNeightbor().orElse(null) == l2);
-        assertTrue(l2.getRightNeightbor().orElse(null) == l3);
-        assertTrue(l3.getRightNeightbor().orElse(null) == l4);
-        assertTrue(l4.getLeftNeightbor().orElse(null) == l3);
-        assertTrue(l3.getLeftNeightbor().orElse(null) == l2);
-        assertTrue(l2.getLeftNeightbor().orElse(null) == l1);
+        assertFalse(l1.getLeftNeighbor().isPresent());
+        assertFalse(l4.getRightNeighbor().isPresent());
+        assertTrue(l1.getRightNeighbor().orElse(null) == l2);
+        assertTrue(l2.getRightNeighbor().orElse(null) == l3);
+        assertTrue(l3.getRightNeighbor().orElse(null) == l4);
+        assertTrue(l4.getLeftNeighbor().orElse(null) == l3);
+        assertTrue(l3.getLeftNeighbor().orElse(null) == l2);
+        assertTrue(l2.getLeftNeighbor().orElse(null) == l1);
 
 
     }
