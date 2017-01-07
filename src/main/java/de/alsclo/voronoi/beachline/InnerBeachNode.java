@@ -1,14 +1,25 @@
 package de.alsclo.voronoi.beachline;
 
-import lombok.Data;
+import static de.alsclo.voronoi.util.Math.sq;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
-@Data
-@EqualsAndHashCode(callSuper = false)
+@Getter
+@ToString @EqualsAndHashCode(callSuper = false)
 public class InnerBeachNode extends BeachNode {
 
     private BeachNode leftChild;
     private BeachNode rightChild;
+
+    public InnerBeachNode() {
+
+    }
+
+    public InnerBeachNode(BeachNode leftChild, BeachNode rightChild) {
+        setLeftChild(leftChild);
+        setRightChild(rightChild);
+    }
 
     @Override
     public LeafBeachNode insertArc(double siteX, double siteY) {
@@ -36,10 +47,6 @@ public class InnerBeachNode extends BeachNode {
             // The new arc is between both intersection points, choose the lower leaf to be expanded
             return (l.getSiteY() < r.getSiteY() ? leftChild : rightChild).insertArc(siteX, siteY);
         }
-    }
-
-    private static double sq(double o) {
-        return o * o;
     }
 
     @Override

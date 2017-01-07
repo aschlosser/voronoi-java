@@ -4,6 +4,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.val;
 
+import java.util.Optional;
+
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class LeafBeachNode extends BeachNode {
@@ -53,4 +55,34 @@ public class LeafBeachNode extends BeachNode {
     public LeafBeachNode getRightmostLeaf() {
         return this;
     }
+
+    public Optional<LeafBeachNode> getLeftNeightbor() {
+        InnerBeachNode current = getParent();
+        BeachNode child = this;
+        while(current.getParent() != null) {
+            if (current.getRightChild() == child) {
+                return Optional.of(current.getLeftChild().getRightmostLeaf());
+            } else {
+                child = current;
+                current = current.getParent();
+            }
+        }
+        return Optional.empty();
+    }
+
+    public Optional<LeafBeachNode> getRightNeightbor() {
+        InnerBeachNode current = getParent();
+        BeachNode child = this;
+        while(current.getParent() != null) {
+            if (current.getLeftChild() == child) {
+                return Optional.of(current.getRightChild().getLeftmostLeaf());
+            } else {
+                child = current;
+                current = current.getParent();
+            }
+        }
+        return Optional.empty();
+    }
+
+
 }

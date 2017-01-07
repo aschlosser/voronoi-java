@@ -1,5 +1,6 @@
 package de.alsclo.voronoi.beachline;
 
+import lombok.val;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -22,6 +23,32 @@ public class BeachlineTests {
         InnerBeachNode tmp = (InnerBeachNode) newRoot.getRightChild();
         assertEquals(tmp.getRightChild(), root);
         assertEquals(tmp.getLeftChild(), first);
+    }
+
+    @Test
+    public void testNeightbor() {
+        Beachline bl = new Beachline();
+        //      O
+        //     / \
+        //    O   O
+        //   /|   |\
+        //  1 2   3 4
+        val l1 = new LeafBeachNode(1, 0);
+        val l2 = new LeafBeachNode(2, 0);
+        val l3 = new LeafBeachNode(3, 0);
+        val l4 = new LeafBeachNode(4, 0);
+        bl.setRoot(new InnerBeachNode(new InnerBeachNode(l1, l2), new InnerBeachNode(l3, l4)));
+
+        assertFalse(l1.getLeftNeightbor().isPresent());
+        assertFalse(l4.getRightNeightbor().isPresent());
+        assertTrue(l1.getRightNeightbor().orElse(null) == l2);
+        assertTrue(l2.getRightNeightbor().orElse(null) == l3);
+        assertTrue(l3.getRightNeightbor().orElse(null) == l4);
+        assertTrue(l4.getLeftNeightbor().orElse(null) == l3);
+        assertTrue(l3.getLeftNeightbor().orElse(null) == l2);
+        assertTrue(l2.getLeftNeightbor().orElse(null) == l1);
+
+
     }
 
 }

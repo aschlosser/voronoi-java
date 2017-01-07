@@ -1,5 +1,9 @@
 package de.alsclo.voronoi.util;
 
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
+@ToString @EqualsAndHashCode
 public class Point {
 
     public final double x;
