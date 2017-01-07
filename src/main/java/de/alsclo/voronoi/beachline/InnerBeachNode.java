@@ -2,9 +2,9 @@ package de.alsclo.voronoi.beachline;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class InnerBeachNode extends BeachNode {
 
     private BeachNode leftChild;

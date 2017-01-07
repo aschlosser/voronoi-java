@@ -1,8 +1,10 @@
 package de.alsclo.voronoi.beachline;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public abstract class BeachNode {
 
     private InnerBeachNode parent;

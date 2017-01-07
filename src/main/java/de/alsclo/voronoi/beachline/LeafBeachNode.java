@@ -1,8 +1,11 @@
 package de.alsclo.voronoi.beachline;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.val;
 
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class LeafBeachNode extends BeachNode {
 
     private final double siteX;
@@ -19,20 +22,19 @@ public class LeafBeachNode extends BeachNode {
 
     @Override
     public LeafBeachNode insertArc(double newSiteX, double newSiteY) {
-        InnerBeachNode replacement = new InnerBeachNode();
-        LeafBeachNode newLeaf = new LeafBeachNode(newSiteX, newSiteY);
+        val replacement = new InnerBeachNode();
+        val newLeaf = new LeafBeachNode(newSiteX, newSiteY);
+        val median = new InnerBeachNode();
         if (newSiteX < siteX) {
-            InnerBeachNode tmp = new InnerBeachNode();
-            tmp.setLeftChild(new LeafBeachNode(this));
-            tmp.setRightChild(newLeaf);
-            replacement.setLeftChild(tmp);
+            median.setLeftChild(new LeafBeachNode(this));
+            median.setRightChild(newLeaf);
+            replacement.setLeftChild(median);
             replacement.setRightChild(new LeafBeachNode(this));
         } else {
             replacement.setLeftChild(new LeafBeachNode(this));
-            InnerBeachNode tmp = new InnerBeachNode();
-            tmp.setLeftChild(newLeaf);
-            tmp.setRightChild(new LeafBeachNode(this));
-            replacement.setRightChild(tmp);
+            median.setLeftChild(newLeaf);
+            median.setRightChild(new LeafBeachNode(this));
+            replacement.setRightChild(median);
         }
         if (getParent().getLeftChild() == this) {
             getParent().setLeftChild(replacement);
