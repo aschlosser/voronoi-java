@@ -1,18 +1,20 @@
 package de.alsclo.voronoi.beachline;
 
 
+import de.alsclo.voronoi.graph.Point;
+
 import java.util.Optional;
 
 public class Beachline {
 
     private final InnerBeachNode rootContainer = new InnerBeachNode();
 
-    public InsertionResult insertArc(double siteX, double siteY) {
+    public InsertionResult insertArc(Point newSite) {
         BeachNode root = getRoot();
         if (root != null) {
-            return root.insertArc(siteX, siteY);
+            return root.insertArc(newSite);
         } else {
-            LeafBeachNode l = new LeafBeachNode(siteX, siteY);
+            LeafBeachNode l = new LeafBeachNode(newSite);
             setRoot(l);
             return new InsertionResult(Optional.empty(), l);
         }

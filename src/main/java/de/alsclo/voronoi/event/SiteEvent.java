@@ -22,8 +22,8 @@ public class SiteEvent extends Event {
 
     @Override
     public Collection<Event> handle(Beachline beachline, Graph graph) {
-        val result = beachline.insertArc(sitePoint.x, sitePoint.y);
-        result.splitLeaf.ifPresent(l -> graph.addEdge(new Edge(new Point(l.getSiteX(), l.getSiteY()), sitePoint)));
+        val result = beachline.insertArc(sitePoint);
+        result.splitLeaf.ifPresent(l -> graph.addEdge(new Edge(l.getSite(), sitePoint)));
 
         // l2 -> l1 -> leaf <- r1 <- r2
         Optional<LeafBeachNode> l1 = result.newLeaf.getLeftNeighbor();

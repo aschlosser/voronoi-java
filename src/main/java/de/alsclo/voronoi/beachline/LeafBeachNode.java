@@ -1,5 +1,6 @@
 package de.alsclo.voronoi.beachline;
 
+import de.alsclo.voronoi.graph.Point;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.val;
@@ -10,24 +11,22 @@ import java.util.Optional;
 @EqualsAndHashCode(callSuper = false)
 public class LeafBeachNode extends BeachNode {
 
-    private final double siteX;
-    private final double siteY;
+    private final Point site;
 
     private LeafBeachNode(LeafBeachNode other) {
-        this(other.siteX, other.siteY);
+        this(other.site);
     }
 
-    public LeafBeachNode(double siteX, double siteY) {
-        this.siteX = siteX;
-        this.siteY = siteY;
+    public LeafBeachNode(Point site) {
+        this.site = site;
     }
 
     @Override
-    public InsertionResult insertArc(double newSiteX, double newSiteY) {
+    public InsertionResult insertArc(Point newSite) {
         val replacement = new InnerBeachNode();
-        val newLeaf = new LeafBeachNode(newSiteX, newSiteY);
+        val newLeaf = new LeafBeachNode(newSite);
         val median = new InnerBeachNode();
-        if (newSiteX < siteX) {
+        if (newSite.x < site.x) {
             median.setLeftChild(new LeafBeachNode(this));
             median.setRightChild(newLeaf);
             replacement.setLeftChild(median);

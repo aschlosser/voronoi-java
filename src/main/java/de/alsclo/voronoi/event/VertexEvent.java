@@ -27,7 +27,7 @@ public class VertexEvent extends Event {
     }
 
     public VertexEvent(LeafBeachNode l, LeafBeachNode c, LeafBeachNode r) {
-        this(l, c, r, new Circle(l, c, r));
+        this(l, c, r, new Circle(l.getSite(), c.getSite(), r.getSite()));
     }
 
     @Override
@@ -39,14 +39,14 @@ public class VertexEvent extends Event {
         private final Point center;
         private final double radius;
 
-        private Circle(LeafBeachNode l, LeafBeachNode c, LeafBeachNode r) {
-            double ma = (c.getSiteY() - l.getSiteY()) / (c.getSiteX() - l.getSiteX());
-            double mb = (r.getSiteY() - c.getSiteY()) / (r.getSiteX() - c.getSiteX());
+        private Circle(Point l, Point c, Point r) {
+            double ma = (c.y - l.y) / (c.x - l.x);
+            double mb = (r.y - c.y) / (r.x - c.x);
 
-            double x = (ma * mb * (l.getSiteY() - r.getSiteY()) + mb * (l.getSiteX() + c.getSiteX()) + ma * (c.getSiteX() + r.getSiteX())) / (2.0 * (mb - ma));
-            double y = (x - (l.getSiteX() + c.getSiteX()) / 2.0) / ma + (l.getSiteY() + c.getSiteY()) / 2.0;
+            double x = (ma * mb * (l.y - r.y) + mb * (l.x + c.x) + ma * (c.x + r.x)) / (2.0 * (mb - ma));
+            double y = (x - (l.x + c.x) / 2.0) / ma + (l.y + c.y) / 2.0;
             center = new Point(x, y);
-            radius = sqrt(sq(c.getSiteX() - x) + sq(c.getSiteY() - y));
+            radius = sqrt(sq(c.x - x) + sq(c.y - y));
         }
     }
 }
