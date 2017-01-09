@@ -1,10 +1,14 @@
 package de.alsclo.voronoi.beachline;
 
+import de.alsclo.voronoi.event.Event;
+import de.alsclo.voronoi.event.VertexEvent;
 import de.alsclo.voronoi.graph.Point;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.val;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 
 @Data
@@ -13,36 +17,35 @@ public class LeafBeachNode extends BeachNode {
 
     private final Point site;
 
-    private LeafBeachNode(LeafBeachNode other) {
-        this(other.site);
-    }
-
     public LeafBeachNode(Point site) {
         this.site = site;
     }
 
+    private LeafBeachNode copy() {
+        return new LeafBeachNode(site);
+    }
+
     @Override
     public InsertionResult insertArc(Point newSite) {
-        val replacement = new InnerBeachNode();
         val newLeaf = new LeafBeachNode(newSite);
-        val median = new InnerBeachNode();
         if (newSite.x < site.x) {
-            median.setLeftChild(new LeafBeachNode(this));
-            median.setRightChild(newLeaf);
-            replacement.setLeftChild(median);
-            replacement.setRightChild(new LeafBeachNode(this));
+            val median = new InnerBeachNode(copy(), newLeaf);
+            val replacement = new InnerBeachNode(median, copy());
+            replaceBy(replacement);
         } else {
-            replacement.setLeftChild(new LeafBeachNode(this));
-            median.setLeftChild(newLeaf);
-            median.setRightChild(new LeafBeachNode(this));
-            replacement.setRightChild(median);
-        }
-        if (getParent().getLeftChild() == this) {
-            getParent().setLeftChild(replacement);
-        } else {
-            getParent().setRightChild(replacement);
+            val median = new InnerBeachNode(newLeaf, copy());
+            val replacement = new InnerBeachNode(copy(), median);
+            replaceBy(replacement);
         }
         return new InsertionResult(Optional.of(this), newLeaf);
+    }
+
+    private void replaceBy(InnerBeachNode n) {
+        if (getParent().getLeftChild() == this) {
+            getParent().setLeftChild(n);
+        } else {
+            getParent().setRightChild(n);
+        }
     }
 
     @Override
@@ -83,5 +86,25 @@ public class LeafBeachNode extends BeachNode {
         return Optional.empty();
     }
 
+    public List<Event> checkCircleEvents() {
+        // l2 -> l1 -> leaf <- r1 <- r2
+        Optional<LeafBeachNode> l1 = getLeftNeighbor();
+        Optional<LeafBeachNode> l2 = l1.flatMap(LeafBeachNode::getLeftNeighbor);
+        Optional<LeafBeachNode> r1 = getRightNeighbor();
+        Optional<LeafBeachNode> r2 = r1.flatMap(LeafBeachNode::getRightNeighbor);
+
+        val events = new LinkedList<Event>();
+
+        if (l2.isPresent()) {
+            events.add(new VertexEvent(l2.get(), l1.get(), this));
+        }
+        if (l1.isPresent() && r1.isPresent()) {
+            events.add(new VertexEvent(l1.get(), this, r1.get()));
+        }
+        if (r2.isPresent()) {
+            events.add(new VertexEvent(this, r1.get(), r2.get()));
+        }
+        return events;
+    }
 
 }

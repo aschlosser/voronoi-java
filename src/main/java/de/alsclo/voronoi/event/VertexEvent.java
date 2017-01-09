@@ -32,6 +32,8 @@ public class VertexEvent extends Event {
 
     @Override
     public Collection<Event> handle(Beachline beachline, Graph graph) {
+
+
         return Collections.emptyList();
     }
 
