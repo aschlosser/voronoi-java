@@ -17,7 +17,7 @@ public class LeafBeachNode extends BeachNode {
 
     private final Point site;
 
-    public LeafBeachNode(Point site) {
+    LeafBeachNode(Point site) {
         this.site = site;
     }
 
@@ -37,15 +37,15 @@ public class LeafBeachNode extends BeachNode {
             val replacement = new InnerBeachNode(copy(), median);
             replaceBy(replacement);
         }
+        setParent(null); // Disconnect this node from the tree
         return new InsertionResult(Optional.of(this), newLeaf);
     }
 
-    private void replaceBy(InnerBeachNode n) {
-        if (getParent().getLeftChild() == this) {
-            getParent().setLeftChild(n);
-        } else {
-            getParent().setRightChild(n);
-        }
+    public void remove() {
+        val parent = getParent();
+        val sibling = parent.getLeftChild() == this ? parent.getRightChild() : parent.getLeftChild();
+        parent.replaceBy(sibling);
+        setParent(null);
     }
 
     @Override
@@ -61,12 +61,14 @@ public class LeafBeachNode extends BeachNode {
     public Optional<LeafBeachNode> getLeftNeighbor() {
         InnerBeachNode current = getParent();
         BeachNode child = this;
-        while(current.getParent() != null) {
-            if (current.getRightChild() == child) {
-                return Optional.of(current.getLeftChild().getRightmostLeaf());
-            } else {
-                child = current;
-                current = current.getParent();
+        if (current != null) {
+            while(current.getParent() != null) {
+                if (current.getRightChild() == child) {
+                    return Optional.of(current.getLeftChild().getRightmostLeaf());
+                } else {
+                    child = current;
+                    current = current.getParent();
+                }
             }
         }
         return Optional.empty();
@@ -75,12 +77,14 @@ public class LeafBeachNode extends BeachNode {
     public Optional<LeafBeachNode> getRightNeighbor() {
         InnerBeachNode current = getParent();
         BeachNode child = this;
-        while(current.getParent() != null) {
-            if (current.getLeftChild() == child) {
-                return Optional.of(current.getRightChild().getLeftmostLeaf());
-            } else {
-                child = current;
-                current = current.getParent();
+        if (current != null) {
+            while(current.getParent() != null) {
+                if (current.getLeftChild() == child) {
+                    return Optional.of(current.getRightChild().getLeftmostLeaf());
+                } else {
+                    child = current;
+                    current = current.getParent();
+                }
             }
         }
         return Optional.empty();
@@ -96,13 +100,13 @@ public class LeafBeachNode extends BeachNode {
         val events = new LinkedList<Event>();
 
         if (l2.isPresent()) {
-            events.add(new VertexEvent(l2.get(), l1.get(), this));
+            VertexEvent.build(l2.get(), l1.get(), this).ifPresent(events::add);
         }
         if (l1.isPresent() && r1.isPresent()) {
-            events.add(new VertexEvent(l1.get(), this, r1.get()));
+            VertexEvent.build(l1.get(), this, r1.get()).ifPresent(events::add);
         }
         if (r2.isPresent()) {
-            events.add(new VertexEvent(this, r1.get(), r2.get()));
+            VertexEvent.build(this, r1.get(), r2.get()).ifPresent(events::add);
         }
         return events;
     }

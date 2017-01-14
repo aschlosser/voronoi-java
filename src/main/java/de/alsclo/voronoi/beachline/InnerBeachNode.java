@@ -14,11 +14,11 @@ public class InnerBeachNode extends BeachNode {
     private BeachNode leftChild;
     private BeachNode rightChild;
 
-    public InnerBeachNode() {
+    InnerBeachNode() {
         
     }
 
-    public InnerBeachNode(BeachNode leftChild, BeachNode rightChild) {
+    InnerBeachNode(BeachNode leftChild, BeachNode rightChild) {
         setLeftChild(leftChild);
         setRightChild(rightChild);
     }
@@ -62,12 +62,12 @@ public class InnerBeachNode extends BeachNode {
     }
 
 
-    public void setLeftChild(BeachNode leftChild) {
+    void setLeftChild(BeachNode leftChild) {
         this.leftChild = leftChild;
         leftChild.setParent(this);
     }
 
-    public void setRightChild(BeachNode rightChild) {
+    void setRightChild(BeachNode rightChild) {
         this.rightChild = rightChild;
         rightChild.setParent(this);
     }

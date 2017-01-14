@@ -2,6 +2,7 @@ package de.alsclo.voronoi.event;
 
 import de.alsclo.voronoi.beachline.Beachline;
 import de.alsclo.voronoi.graph.Graph;
+import de.alsclo.voronoi.graph.Point;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -11,11 +12,12 @@ import java.util.Collection;
 public abstract class Event implements Comparable<Event>{
 
     @Getter
-    private final double y;
+    private final Point point;
 
     @Override
     public int compareTo(Event o) {
-        return y > o.y ? -1 : 1;
+        int tmp = Double.compare(o.point.y, point.y);
+        return tmp == 0 ? Double.compare(point.x, o.point.x) : tmp;
     }
 
     public abstract Collection<Event> handle(Beachline beachline, Graph graph);

@@ -16,7 +16,7 @@ public class SiteEvent extends Event {
     private final Point sitePoint;
 
     public SiteEvent(Point sitePoint) {
-        super(sitePoint.y);
+        super(sitePoint);
         this.sitePoint = sitePoint;
     }
 

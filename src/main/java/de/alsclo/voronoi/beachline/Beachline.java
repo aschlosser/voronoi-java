@@ -2,6 +2,7 @@ package de.alsclo.voronoi.beachline;
 
 
 import de.alsclo.voronoi.graph.Point;
+import lombok.val;
 
 import java.util.Optional;
 
@@ -26,5 +27,21 @@ public class Beachline {
 
     void setRoot(BeachNode n) {
         rootContainer.setLeftChild(n);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Beachline(");
+        if (getRoot() != null) {
+            Optional<LeafBeachNode> current = Optional.of(getRoot().getLeftmostLeaf());
+            while (current.isPresent()) {
+                sb.append(current.get().getSite());
+                sb.append(',');
+                current = current.flatMap(LeafBeachNode::getRightNeighbor);
+            }
+        }
+        sb.append(")");
+        return sb.toString();
     }
 }

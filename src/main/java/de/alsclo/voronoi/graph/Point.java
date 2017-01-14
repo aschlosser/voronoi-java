@@ -5,7 +5,6 @@ import lombok.ToString;
 import static de.alsclo.voronoi.Math.EPSILON;
 import static java.lang.Math.abs;
 
-@ToString
 public class Point {
 
     public final double x;
@@ -34,5 +33,10 @@ public class Point {
         temp = Double.doubleToLongBits(y);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "(" + x + "," + y + ")";
     }
 }

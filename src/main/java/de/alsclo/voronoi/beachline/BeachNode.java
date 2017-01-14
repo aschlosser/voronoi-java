@@ -14,4 +14,14 @@ public abstract class BeachNode {
 
     public abstract LeafBeachNode getLeftmostLeaf();
     public abstract LeafBeachNode getRightmostLeaf();
+
+    void replaceBy(BeachNode n) {
+        if (getParent() != null) {
+            if (getParent().getLeftChild() == this) {
+                getParent().setLeftChild(n);
+            } else {
+                getParent().setRightChild(n);
+            }
+        }
+    }
 }
