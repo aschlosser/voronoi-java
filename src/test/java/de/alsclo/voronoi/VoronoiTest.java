@@ -29,6 +29,7 @@ public class VoronoiTest {
         Voronoi diagram = new Voronoi(2, 2, Arrays.asList(c, p1, p2, p3, p4));
 
         Graph referenceGraph = new Graph();
+        Arrays.asList(c, p1, p2, p3, p4).forEach(referenceGraph::addSite);
         referenceGraph.addEdge(new Edge(p1, p2));
         referenceGraph.addEdge(new Edge(p2, p3));
         referenceGraph.addEdge(new Edge(p3, p4));

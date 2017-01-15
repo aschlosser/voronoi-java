@@ -17,17 +17,20 @@ public class Voronoi {
     private final Graph graph = new Graph();
 
     public Voronoi(double width, double height, Collection<Point> points) {
-        points.stream().filter(p -> p.x < 0 || p.x > width || p.y < 0 || p.y > height).findAny()
-                .ifPresent(p -> {throw new IllegalArgumentException(p + " lies outside the bounding box.");});
+        points.stream().filter(p -> p.x < 0 || p.x > width || p.y < 0 || p.y > height).findAny().ifPresent(p -> {
+            throw new IllegalArgumentException(p + " lies outside the bounding box.");
+        });
         val queue = new PriorityQueue<Event>();
         points.stream().map(SiteEvent::new).forEach(queue::offer);
+        points.forEach(graph::addSite);
 
         val beachline = new Beachline();
         double sweep = Double.MAX_VALUE;
-        while(!queue.isEmpty()) {
-            val e = queue.poll();
-            e.handle(beachline, graph).forEach(queue::add);
+        while (!queue.isEmpty()) {
+            val e = queue.peek();
             assert e.getPoint().y <= sweep;
+            e.handle(beachline, graph).forEach(queue::add);
+            queue.remove(e);
             sweep = e.getPoint().y;
         }
     }

@@ -1,15 +1,18 @@
 package de.alsclo.voronoi.graph;
 
-import javafx.collections.transformation.SortedList;
 import lombok.EqualsAndHashCode;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 
 @EqualsAndHashCode
 public class Graph {
 
     private final BisectorMap edges = new BisectorMap();
     private final Set<Vertex> vertices = new HashSet<>();
+    private final Set<Point> sites = new HashSet<>();
 
     public void addEdge(Edge e) {
         edges.put(e.getSite1(), e.getSite2(), e);
@@ -32,5 +35,12 @@ public class Graph {
         return sb.toString();
     }
 
+    public void addSite(Point newSite) {
+        sites.add(newSite);
+    }
+
+    public Set<Point> getSitePoints() {
+        return Collections.unmodifiableSet(sites);
+    }
 
 }

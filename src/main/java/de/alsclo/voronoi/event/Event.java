@@ -9,16 +9,30 @@ import lombok.RequiredArgsConstructor;
 import java.util.Collection;
 
 @RequiredArgsConstructor
-public abstract class Event implements Comparable<Event>{
+public abstract class Event implements Comparable<Event> {
 
     @Getter
     private final Point point;
 
     @Override
     public int compareTo(Event o) {
-        int tmp = Double.compare(o.point.y, point.y);
-        return tmp == 0 ? Double.compare(point.x, o.point.x) : tmp;
+        return Double.compare(o.point.y, point.y);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Event event = (Event) o;
+        return point.equals(event.point);
+    }
+
+    @Override
+    public int hashCode() {
+        return point.hashCode();
     }
 
     public abstract Collection<Event> handle(Beachline beachline, Graph graph);
+
+
 }

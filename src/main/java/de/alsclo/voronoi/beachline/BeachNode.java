@@ -4,6 +4,8 @@ import de.alsclo.voronoi.graph.Point;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.stream.Stream;
+
 @Getter
 @Setter
 public abstract class BeachNode {
@@ -13,7 +15,10 @@ public abstract class BeachNode {
     public abstract InsertionResult insertArc(Point newSite);
 
     public abstract LeafBeachNode getLeftmostLeaf();
+
     public abstract LeafBeachNode getRightmostLeaf();
+
+    public abstract Stream<LeafBeachNode> leafIterator();
 
     void replaceBy(BeachNode n) {
         if (getParent() != null) {
@@ -24,4 +29,5 @@ public abstract class BeachNode {
             }
         }
     }
+
 }

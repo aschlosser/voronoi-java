@@ -5,17 +5,21 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.util.stream.Stream;
+
 import static de.alsclo.voronoi.Math.sq;
+import static java.lang.Math.sqrt;
 
 @Getter
-@ToString @EqualsAndHashCode(callSuper = false)
+@ToString
+@EqualsAndHashCode(callSuper = false)
 public class InnerBeachNode extends BeachNode {
 
     private BeachNode leftChild;
     private BeachNode rightChild;
 
     InnerBeachNode() {
-        
+
     }
 
     InnerBeachNode(BeachNode leftChild, BeachNode rightChild) {
@@ -29,26 +33,33 @@ public class InnerBeachNode extends BeachNode {
         Point l = leftChild.getRightmostLeaf().getSite();
         Point r = rightChild.getLeftmostLeaf().getSite();
 
-        // Calculate the intersections between both parabolas of those leafs
-        double lh = l.y - newSite.y;
-        double rh = r.y - newSite.y;
-
-        double a = 0.5 / lh - 0.5 / rh;
-        double b = r.x / rh - l.x / lh;
-        double c = (sq(l.x) + sq(l.y) - sq(newSite.y)) / (2.0 * lh)
-                - (sq(r.x) + sq(r.y) - sq(newSite.y)) / (2.0 * rh);
-
-        double x1 = (-b + Math.sqrt(sq(b) - 4.0 * a * c)) / 2.0 * a;
-        double x2 = (-b - Math.sqrt(sq(b) - 4.0 * a * c)) / 2.0 * a;
-
-        if (newSite.x < Math.min(x1, x2)) {
-            return leftChild.insertArc(newSite);
-        } else if (newSite.x > Math.max(x1, x2)) {
-            return rightChild.insertArc(newSite);
-        } else {
-            // The new arc is between both intersection points, choose the lower leaf to be expanded
-            return (l.y < r.y ? leftChild : rightChild).insertArc(newSite);
+        // Maybe swap the points to preserve order
+        if (r.x < l.x) {
+            Point tmp = l;
+            l = r;
+            r = tmp;
         }
+
+        // Transform coordinate to local coords
+        double lxOld = l.x;
+        r = new Point(r.x - l.x, r.y - newSite.y);
+        l = new Point(0, l.y - newSite.y);
+
+        // Compute intersection of parabolas
+        double x;
+        if (Double.compare(l.y, r.y) == 0) {
+            x = r.x / 2.0;
+        } else if (l.y == 0.0) {
+            x = l.x;
+        } else if (r.y == 0.0) {
+            x = r.x;
+        } else {
+            x = (l.y * r.x - sqrt(l.y * r.y * (sq(l.y - r.y) + sq(r.x)))) / (l.y - r.y);
+        }
+
+        x += lxOld;
+
+        return newSite.x < x ? leftChild.insertArc(newSite) : rightChild.insertArc(newSite);
     }
 
     @Override
@@ -59,6 +70,11 @@ public class InnerBeachNode extends BeachNode {
     @Override
     public LeafBeachNode getRightmostLeaf() {
         return rightChild.getRightmostLeaf();
+    }
+
+    @Override
+    public Stream<LeafBeachNode> leafIterator() {
+        return Stream.concat(leftChild.leafIterator(), rightChild.leafIterator());
     }
 
 

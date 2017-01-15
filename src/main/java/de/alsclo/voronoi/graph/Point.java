@@ -1,8 +1,7 @@
 package de.alsclo.voronoi.graph;
 
-import lombok.ToString;
-
 import static de.alsclo.voronoi.Math.EPSILON;
+import static de.alsclo.voronoi.Math.PRECISION;
 import static java.lang.Math.abs;
 
 public class Point {
@@ -26,13 +25,7 @@ public class Point {
 
     @Override
     public int hashCode() {
-        int result;
-        long temp;
-        temp = Double.doubleToLongBits(x);
-        result = (int) (temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(y);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        return result;
+        return (int) (x * PRECISION * 31) + (int) (y * PRECISION);
     }
 
     @Override

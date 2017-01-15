@@ -10,6 +10,7 @@ import lombok.val;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -28,14 +29,18 @@ public class LeafBeachNode extends BeachNode {
     @Override
     public InsertionResult insertArc(Point newSite) {
         val newLeaf = new LeafBeachNode(newSite);
-        if (newSite.x < site.x) {
-            val median = new InnerBeachNode(copy(), newLeaf);
-            val replacement = new InnerBeachNode(median, copy());
-            replaceBy(replacement);
+        if (newSite.y == site.y) {
+            if (newSite.x < site.x) {
+                replaceBy(new InnerBeachNode(newLeaf, copy()));
+            } else {
+                replaceBy(new InnerBeachNode(copy(), newLeaf));
+            }
         } else {
-            val median = new InnerBeachNode(newLeaf, copy());
-            val replacement = new InnerBeachNode(copy(), median);
-            replaceBy(replacement);
+            if (newSite.x < site.x) {
+                replaceBy(new InnerBeachNode(new InnerBeachNode(copy(), newLeaf), copy()));
+            } else {
+                replaceBy(new InnerBeachNode(copy(), new InnerBeachNode(newLeaf, copy())));
+            }
         }
         setParent(null); // Disconnect this node from the tree
         return new InsertionResult(Optional.of(this), newLeaf);
@@ -45,7 +50,7 @@ public class LeafBeachNode extends BeachNode {
         val parent = getParent();
         val sibling = parent.getLeftChild() == this ? parent.getRightChild() : parent.getLeftChild();
         parent.replaceBy(sibling);
-        setParent(null);
+        setParent(null); // Disconnect this node from the tree
     }
 
     @Override
@@ -58,11 +63,16 @@ public class LeafBeachNode extends BeachNode {
         return this;
     }
 
+    @Override
+    public Stream<LeafBeachNode> leafIterator() {
+        return Stream.of(this);
+    }
+
     public Optional<LeafBeachNode> getLeftNeighbor() {
         InnerBeachNode current = getParent();
         BeachNode child = this;
         if (current != null) {
-            while(current.getParent() != null) {
+            while (current.getParent() != null) {
                 if (current.getRightChild() == child) {
                     return Optional.of(current.getLeftChild().getRightmostLeaf());
                 } else {
@@ -78,7 +88,7 @@ public class LeafBeachNode extends BeachNode {
         InnerBeachNode current = getParent();
         BeachNode child = this;
         if (current != null) {
-            while(current.getParent() != null) {
+            while (current.getParent() != null) {
                 if (current.getLeftChild() == child) {
                     return Optional.of(current.getRightChild().getLeftmostLeaf());
                 } else {
@@ -90,7 +100,7 @@ public class LeafBeachNode extends BeachNode {
         return Optional.empty();
     }
 
-    public List<Event> checkCircleEvents() {
+    public List<Event> checkCircleEvents(double sweepY) {
         // l2 -> l1 -> leaf <- r1 <- r2
         Optional<LeafBeachNode> l1 = getLeftNeighbor();
         Optional<LeafBeachNode> l2 = l1.flatMap(LeafBeachNode::getLeftNeighbor);
@@ -100,13 +110,13 @@ public class LeafBeachNode extends BeachNode {
         val events = new LinkedList<Event>();
 
         if (l2.isPresent()) {
-            VertexEvent.build(l2.get(), l1.get(), this).ifPresent(events::add);
+            VertexEvent.build(l2.get(), l1.get(), this).filter(e -> e.getPoint().y <= sweepY).ifPresent(events::add);
         }
         if (l1.isPresent() && r1.isPresent()) {
-            VertexEvent.build(l1.get(), this, r1.get()).ifPresent(events::add);
+            VertexEvent.build(l1.get(), this, r1.get()).filter(e -> e.getPoint().y <= sweepY).ifPresent(events::add);
         }
         if (r2.isPresent()) {
-            VertexEvent.build(this, r1.get(), r2.get()).ifPresent(events::add);
+            VertexEvent.build(this, r1.get(), r2.get()).filter(e -> e.getPoint().y <= sweepY).ifPresent(events::add);
         }
         return events;
     }

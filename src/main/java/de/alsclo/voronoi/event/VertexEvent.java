@@ -6,10 +6,11 @@ import de.alsclo.voronoi.graph.Edge;
 import de.alsclo.voronoi.graph.Graph;
 import de.alsclo.voronoi.graph.Point;
 import de.alsclo.voronoi.graph.Vertex;
-import lombok.val;
+import lombok.ToString;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static de.alsclo.voronoi.Math.sq;
@@ -31,18 +32,24 @@ public class VertexEvent extends Event {
     }
 
     public static Optional<VertexEvent> build(LeafBeachNode l, LeafBeachNode c, LeafBeachNode r) {
-        Circle circle = new Circle(l.getSite(), c.getSite(), r.getSite());
-        if (circle.isValid()) {
-            return Optional.of(new VertexEvent(l,c,r,circle));
-        } else {
-            return Optional.empty();
+        Point ap = l.getSite(), bp = c.getSite(), cp = r.getSite();
+        double convergence = (ap.y - bp.y) * (bp.x - cp.x) - (bp.y - cp.y) * (ap.x - bp.x);
+        if (convergence > 0) {
+            Circle circle = new Circle(ap, bp, cp);
+            if (circle.isValid()) {
+                return Optional.of(new VertexEvent(l, c, r, circle));
+            }
         }
+        return Optional.empty();
     }
 
     @Override
     public Collection<Event> handle(Beachline beachline, Graph graph) {
         // If l,c,r changed since the inception of this event we have to discard it
         if (!c.getLeftNeighbor().filter(l::equals).isPresent() || !c.getRightNeighbor().filter(r::equals).isPresent()) {
+            return Collections.emptyList();
+        }
+        if (graph.getSitePoints().stream().anyMatch(circle::contains)) {
             return Collections.emptyList();
         }
 
@@ -56,9 +63,12 @@ public class VertexEvent extends Event {
         graph.addEdge(e);
         e.addVertex(v);
 
-        return Collections.emptyList();
+        List<Event> events = l.checkCircleEvents(getPoint().y);
+        events.addAll(r.checkCircleEvents(getPoint().y));
+        return events;
     }
 
+    @ToString
     private static class Circle {
         private final Point center;
         private final double radius;
@@ -92,6 +102,10 @@ public class VertexEvent extends Event {
 
         public boolean isValid() {
             return Double.isFinite(radius);
+        }
+
+        public boolean contains(Point p) {
+            return sqrt(sq(p.x - center.x) + sq(p.y - center.y)) < radius;
         }
     }
 }
