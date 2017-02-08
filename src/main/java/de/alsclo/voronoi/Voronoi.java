@@ -16,10 +16,7 @@ public class Voronoi {
     @Getter
     private final Graph graph = new Graph();
 
-    public Voronoi(double width, double height, Collection<Point> points) {
-        points.stream().filter(p -> p.x < 0 || p.x > width || p.y < 0 || p.y > height).findAny().ifPresent(p -> {
-            throw new IllegalArgumentException(p + " lies outside the bounding box.");
-        });
+    public Voronoi(Collection<Point> points) {
         val queue = new PriorityQueue<Event>();
         points.stream().map(SiteEvent::new).forEach(queue::offer);
         points.forEach(graph::addSite);
@@ -33,6 +30,14 @@ public class Voronoi {
             queue.remove(e);
             sweep = e.getPoint().y;
         }
+    }
+
+    public void applyBoundingBox(double x, double y, double width, double height) {
+        getGraph().getSitePoints().stream()
+                .filter(p -> p.x < x || p.x > x + width || p.y < y || p.y > y + height).findAny().ifPresent(p -> {
+            throw new IllegalArgumentException("Site " + p + " lies outside the bounding box.");
+        });
+        //TODO
     }
 
 }

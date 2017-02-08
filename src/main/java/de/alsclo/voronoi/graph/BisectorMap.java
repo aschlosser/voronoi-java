@@ -7,6 +7,7 @@ import lombok.ToString;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Stream;
 
 public class BisectorMap {
 
@@ -38,6 +39,10 @@ public class BisectorMap {
     @Override
     public int hashCode() {
         return data.hashCode();
+    }
+
+    public Stream<Edge> stream() {
+        return data.values().stream();
     }
 
     @RequiredArgsConstructor

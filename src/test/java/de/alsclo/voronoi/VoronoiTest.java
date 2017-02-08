@@ -26,10 +26,12 @@ public class VoronoiTest {
 
         val c = (new Point(1, 1));
 
-        Voronoi diagram = new Voronoi(2, 2, Arrays.asList(c, p1, p2, p3, p4));
+        val points = Arrays.asList(c, p1, p2, p3, p4);
+
+        Voronoi diagram = new Voronoi(points);
 
         Graph referenceGraph = new Graph();
-        Arrays.asList(c, p1, p2, p3, p4).forEach(referenceGraph::addSite);
+        points.forEach(referenceGraph::addSite);
         referenceGraph.addEdge(new Edge(p1, p2));
         referenceGraph.addEdge(new Edge(p2, p3));
         referenceGraph.addEdge(new Edge(p3, p4));
@@ -63,17 +65,17 @@ public class VoronoiTest {
     }
 
     @Test
-    public void testRejection() {
-        val points = new ArrayList<Point>();
-        points.add(new Point(10, 0));
-        points.add(new Point(0, 10));
-
+    public void testBoundingBox1() {
         try {
-            new Voronoi(3, 3, points);
+            new Voronoi(Arrays.asList(new Point(10, 0), new Point(0, 10)))
+                    .applyBoundingBox(0, 0, 5, 5);
             fail();
-        } catch (IllegalArgumentException ignored) {
+        } catch (IllegalArgumentException ignored) {}
+    }
 
-        }
+    @Test
+    public void testBoundingBox2() {
+
     }
 
 }

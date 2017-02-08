@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 @EqualsAndHashCode
 public class Graph {
@@ -41,6 +42,10 @@ public class Graph {
 
     public Set<Point> getSitePoints() {
         return Collections.unmodifiableSet(sites);
+    }
+
+    public Stream<Edge> edgeStream() {
+        return edges.stream();
     }
 
 }

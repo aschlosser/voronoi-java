@@ -1,9 +1,11 @@
 package de.alsclo.voronoi.graph;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class Vertex {
+    @Getter
     private final Point location;
 
     @Override
