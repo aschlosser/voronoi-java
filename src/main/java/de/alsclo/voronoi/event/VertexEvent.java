@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static de.alsclo.voronoi.Math.EPSILON;
 import static de.alsclo.voronoi.Math.sq;
 import static java.lang.Math.sqrt;
 
@@ -57,6 +58,8 @@ public class VertexEvent extends Event {
 
         Vertex v = new Vertex(circle.center);
         graph.addVertex(v);
+        assert graph.getEdgeBetweenSites(l.getSite(), c.getSite()).isPresent();
+        assert graph.getEdgeBetweenSites(r.getSite(), c.getSite()).isPresent();
         graph.getEdgeBetweenSites(l.getSite(), c.getSite()).ifPresent(e -> e.addVertex(v));
         graph.getEdgeBetweenSites(r.getSite(), c.getSite()).ifPresent(e -> e.addVertex(v));
         Edge e = new Edge(l.getSite(), r.getSite());
@@ -105,7 +108,7 @@ public class VertexEvent extends Event {
         }
 
         public boolean contains(Point p) {
-            return sqrt(sq(p.x - center.x) + sq(p.y - center.y)) < radius;
+            return sqrt(sq(p.x - center.x) + sq(p.y - center.y)) < (radius - EPSILON);
         }
     }
 }
