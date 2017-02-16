@@ -33,13 +33,6 @@ public class InnerBeachNode extends BeachNode {
         Point l = leftChild.getRightmostLeaf().getSite();
         Point r = rightChild.getLeftmostLeaf().getSite();
 
-        // Maybe swap the points to preserve order
-        if (r.x < l.x) {
-            Point tmp = l;
-            l = r;
-            r = tmp;
-        }
-
         // Transform coordinate to local coords
         double lxOld = l.x;
         r = new Point(r.x - l.x, r.y - newSite.y);
