@@ -30,6 +30,9 @@ public class VertexEvent extends Event {
         this.c = c;
         this.r = r;
         this.circle = circle;
+        l.subscribe(this);
+        c.subscribe(this);
+        r.subscribe(this);
     }
 
     public static Optional<VertexEvent> build(LeafBeachNode l, LeafBeachNode c, LeafBeachNode r) {
@@ -45,16 +48,21 @@ public class VertexEvent extends Event {
     }
 
     @Override
-    public Collection<Event> handle(Beachline beachline, Graph graph) {
-        // If l,c,r changed since the inception of this event we have to discard it
-        if (!c.getLeftNeighbor().filter(l::equals).isPresent() || !c.getRightNeighbor().filter(r::equals).isPresent()) {
-            return Collections.emptyList();
-        }
+    public Collection<Event> handle(Collection eventQueue, Beachline beachline, Graph graph) {
+        assert c.getLeftNeighbor().filter(l::equals).isPresent();
+        assert c.getRightNeighbor().filter(r::equals).isPresent();
+        assert l.getRightNeighbor().filter(c::equals).isPresent();
+        assert r.getLeftNeighbor().filter(c::equals).isPresent();
+
         if (graph.getSitePoints().stream().anyMatch(circle::contains)) {
             return Collections.emptyList();
         }
 
         c.remove();
+        c.getSubscribers().forEach(e -> {
+            eventQueue.remove(e);
+            c.unsubscribe(e);
+        });
 
         Vertex v = new Vertex(circle.center);
         graph.addVertex(v);

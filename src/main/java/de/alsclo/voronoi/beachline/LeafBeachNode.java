@@ -3,7 +3,6 @@ package de.alsclo.voronoi.beachline;
 import de.alsclo.voronoi.event.Event;
 import de.alsclo.voronoi.event.VertexEvent;
 import de.alsclo.voronoi.graph.Point;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.val;
 
@@ -12,11 +11,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-@Data
 @EqualsAndHashCode(callSuper = false)
 public class LeafBeachNode extends BeachNode {
 
     private final Point site;
+
+    private final List<VertexEvent> subscribedEvents = new LinkedList<>();
 
     LeafBeachNode(Point site) {
         this.site = site;
@@ -24,6 +24,10 @@ public class LeafBeachNode extends BeachNode {
 
     private LeafBeachNode copy() {
         return new LeafBeachNode(site);
+    }
+
+    public Point getSite() {
+        return site;
     }
 
     @Override
@@ -47,8 +51,8 @@ public class LeafBeachNode extends BeachNode {
     }
 
     public void remove() {
-        val parent = getParent();
-        val sibling = parent.getLeftChild() == this ? parent.getRightChild() : parent.getLeftChild();
+        InnerBeachNode parent = getParent();
+        BeachNode sibling = parent.getLeftChild() == this ? parent.getRightChild() : parent.getLeftChild();
         parent.replaceBy(sibling);
         setParent(null); // Disconnect this node from the tree
     }
@@ -100,25 +104,30 @@ public class LeafBeachNode extends BeachNode {
         return Optional.empty();
     }
 
+    private static Optional<VertexEvent> buildEvent(LeafBeachNode center) {
+        return center.getLeftNeighbor().flatMap(l -> center.getRightNeighbor().flatMap(r -> VertexEvent.build(l, center, r)));
+    }
+
     public List<Event> checkCircleEvents(double sweepY) {
         // l2 -> l1 -> leaf <- r1 <- r2
-        Optional<LeafBeachNode> l1 = getLeftNeighbor();
-        Optional<LeafBeachNode> l2 = l1.flatMap(LeafBeachNode::getLeftNeighbor);
-        Optional<LeafBeachNode> r1 = getRightNeighbor();
-        Optional<LeafBeachNode> r2 = r1.flatMap(LeafBeachNode::getRightNeighbor);
-
         val events = new LinkedList<Event>();
-
-        if (l2.isPresent()) {
-            VertexEvent.build(l2.get(), l1.get(), this).filter(e -> e.getPoint().y <= sweepY).ifPresent(events::add);
-        }
-        if (l1.isPresent() && r1.isPresent()) {
-            VertexEvent.build(l1.get(), this, r1.get()).filter(e -> e.getPoint().y <= sweepY).ifPresent(events::add);
-        }
-        if (r2.isPresent()) {
-            VertexEvent.build(this, r1.get(), r2.get()).filter(e -> e.getPoint().y <= sweepY).ifPresent(events::add);
-        }
+        getLeftNeighbor().flatMap(LeafBeachNode::getLeftNeighbor).flatMap(LeafBeachNode::buildEvent).ifPresent(events::add);
+        getLeftNeighbor().flatMap(LeafBeachNode::buildEvent).ifPresent(events::add);
+        buildEvent(this).ifPresent(events::add);
+        getRightNeighbor().flatMap(LeafBeachNode::buildEvent).ifPresent(events::add);
+        getRightNeighbor().flatMap(LeafBeachNode::getRightNeighbor).flatMap(LeafBeachNode::buildEvent).ifPresent(events::add);
         return events;
     }
 
+    public void subscribe(VertexEvent e) {
+        subscribedEvents.add(e);
+    }
+
+    public void unsubscribe(VertexEvent e) {
+        subscribedEvents.remove(e);
+    }
+
+    public List<VertexEvent> getSubscribers() {
+        return new LinkedList<>(subscribedEvents);
+    }
 }
