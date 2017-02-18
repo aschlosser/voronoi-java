@@ -9,8 +9,6 @@ import de.alsclo.voronoi.graph.Vertex;
 import lombok.ToString;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
 import static de.alsclo.voronoi.Math.EPSILON;
@@ -48,35 +46,27 @@ public class VertexEvent extends Event {
     }
 
     @Override
-    public Collection<Event> handle(Collection eventQueue, Beachline beachline, Graph graph) {
+    public void handle(Collection<Event> eventQueue, Beachline beachline, Graph graph) {
         assert c.getLeftNeighbor().filter(l::equals).isPresent();
         assert c.getRightNeighbor().filter(r::equals).isPresent();
         assert l.getRightNeighbor().filter(c::equals).isPresent();
         assert r.getLeftNeighbor().filter(c::equals).isPresent();
 
-        if (graph.getSitePoints().stream().anyMatch(circle::contains)) {
-            return Collections.emptyList();
+        if (graph.getSitePoints().stream().noneMatch(circle::contains)) {
+            c.remove();
+            c.getSubscribers().forEach(eventQueue::remove);
+
+            Vertex v = new Vertex(circle.center);
+            graph.addVertex(v);
+            graph.getEdgeBetweenSites(l.getSite(), c.getSite()).get().addVertex(v);
+            graph.getEdgeBetweenSites(r.getSite(), c.getSite()).get().addVertex(v);
+            Edge e = new Edge(l.getSite(), r.getSite());
+            graph.addEdge(e);
+            e.addVertex(v);
+
+            l.addCircleEvents(eventQueue::add, getPoint().y);
+            r.addCircleEvents(eventQueue::add, getPoint().y);
         }
-
-        c.remove();
-        c.getSubscribers().forEach(e -> {
-            eventQueue.remove(e);
-            c.unsubscribe(e);
-        });
-
-        Vertex v = new Vertex(circle.center);
-        graph.addVertex(v);
-        assert graph.getEdgeBetweenSites(l.getSite(), c.getSite()).isPresent();
-        assert graph.getEdgeBetweenSites(r.getSite(), c.getSite()).isPresent();
-        graph.getEdgeBetweenSites(l.getSite(), c.getSite()).ifPresent(e -> e.addVertex(v));
-        graph.getEdgeBetweenSites(r.getSite(), c.getSite()).ifPresent(e -> e.addVertex(v));
-        Edge e = new Edge(l.getSite(), r.getSite());
-        graph.addEdge(e);
-        e.addVertex(v);
-
-        List<Event> events = l.checkCircleEvents(getPoint().y);
-        events.addAll(r.checkCircleEvents(getPoint().y));
-        return events;
     }
 
     @ToString

@@ -22,7 +22,7 @@ public class InnerBeachNode extends BeachNode {
 
     }
 
-    InnerBeachNode(BeachNode leftChild, BeachNode rightChild) {
+    public InnerBeachNode(BeachNode leftChild, BeachNode rightChild) {
         setLeftChild(leftChild);
         setRightChild(rightChild);
     }
@@ -64,12 +64,6 @@ public class InnerBeachNode extends BeachNode {
     public LeafBeachNode getRightmostLeaf() {
         return rightChild.getRightmostLeaf();
     }
-
-    @Override
-    public Stream<LeafBeachNode> leafIterator() {
-        return Stream.concat(leftChild.leafIterator(), rightChild.leafIterator());
-    }
-
 
     void setLeftChild(BeachNode leftChild) {
         this.leftChild = leftChild;

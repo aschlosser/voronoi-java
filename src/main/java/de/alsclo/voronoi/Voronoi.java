@@ -26,7 +26,7 @@ public class Voronoi {
         while (!queue.isEmpty()) {
             val e = queue.peek();
             assert e.getPoint().y <= sweep;
-            e.handle(queue, beachline, graph).forEach(queue::add);
+            e.handle(queue, beachline, graph);
             queue.remove(e);
             sweep = e.getPoint().y;
         }

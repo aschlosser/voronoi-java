@@ -1,13 +1,7 @@
 package de.alsclo.voronoi.beachline;
 
 import de.alsclo.voronoi.graph.Point;
-import lombok.Getter;
-import lombok.Setter;
 
-import java.util.stream.Stream;
-
-@Getter
-@Setter
 public abstract class BeachNode {
 
     private InnerBeachNode parent;
@@ -17,8 +11,6 @@ public abstract class BeachNode {
     public abstract LeafBeachNode getLeftmostLeaf();
 
     public abstract LeafBeachNode getRightmostLeaf();
-
-    public abstract Stream<LeafBeachNode> leafIterator();
 
     void replaceBy(BeachNode n) {
         if (getParent() != null) {
@@ -30,4 +22,11 @@ public abstract class BeachNode {
         }
     }
 
+    public InnerBeachNode getParent() {
+        return parent;
+    }
+
+    public void setParent(InnerBeachNode parent) {
+        this.parent = parent;
+    }
 }

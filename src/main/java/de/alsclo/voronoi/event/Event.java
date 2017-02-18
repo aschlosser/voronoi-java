@@ -32,7 +32,7 @@ public abstract class Event implements Comparable<Event> {
         return point.hashCode();
     }
 
-    public abstract Collection<Event> handle(Collection eventQueue, Beachline beachline, Graph graph);
+    public abstract void handle(Collection<Event> eventQueue, Beachline beachline, Graph graph);
 
 
 }

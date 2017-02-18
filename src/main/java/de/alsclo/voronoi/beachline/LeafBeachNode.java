@@ -4,12 +4,12 @@ import de.alsclo.voronoi.event.Event;
 import de.alsclo.voronoi.event.VertexEvent;
 import de.alsclo.voronoi.graph.Point;
 import lombok.EqualsAndHashCode;
-import lombok.val;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
+import java.util.function.Consumer;
 
 @EqualsAndHashCode(callSuper = false)
 public class LeafBeachNode extends BeachNode {
@@ -32,7 +32,7 @@ public class LeafBeachNode extends BeachNode {
 
     @Override
     public InsertionResult insertArc(Point newSite) {
-        val newLeaf = new LeafBeachNode(newSite);
+        LeafBeachNode newLeaf = new LeafBeachNode(newSite);
         if (newSite.y == site.y) {
             if (newSite.x < site.x) {
                 replaceBy(new InnerBeachNode(newLeaf, copy()));
@@ -65,11 +65,6 @@ public class LeafBeachNode extends BeachNode {
     @Override
     public LeafBeachNode getRightmostLeaf() {
         return this;
-    }
-
-    @Override
-    public Stream<LeafBeachNode> leafIterator() {
-        return Stream.of(this);
     }
 
     public Optional<LeafBeachNode> getLeftNeighbor() {
@@ -108,26 +103,21 @@ public class LeafBeachNode extends BeachNode {
         return center.getLeftNeighbor().flatMap(l -> center.getRightNeighbor().flatMap(r -> VertexEvent.build(l, center, r)));
     }
 
-    public List<Event> checkCircleEvents(double sweepY) {
+
+    public void addCircleEvents(Consumer<Event> q, double sweepY) {
         // l2 -> l1 -> leaf <- r1 <- r2
-        val events = new LinkedList<Event>();
-        getLeftNeighbor().flatMap(LeafBeachNode::getLeftNeighbor).flatMap(LeafBeachNode::buildEvent).ifPresent(events::add);
-        getLeftNeighbor().flatMap(LeafBeachNode::buildEvent).ifPresent(events::add);
-        buildEvent(this).ifPresent(events::add);
-        getRightNeighbor().flatMap(LeafBeachNode::buildEvent).ifPresent(events::add);
-        getRightNeighbor().flatMap(LeafBeachNode::getRightNeighbor).flatMap(LeafBeachNode::buildEvent).ifPresent(events::add);
-        return events;
+        getLeftNeighbor().flatMap(LeafBeachNode::getLeftNeighbor).flatMap(LeafBeachNode::buildEvent).ifPresent(q);
+        getLeftNeighbor().flatMap(LeafBeachNode::buildEvent).ifPresent(q);
+        buildEvent(this).ifPresent(q);
+        getRightNeighbor().flatMap(LeafBeachNode::buildEvent).ifPresent(q);
+        getRightNeighbor().flatMap(LeafBeachNode::getRightNeighbor).flatMap(LeafBeachNode::buildEvent).ifPresent(q);
     }
 
     public void subscribe(VertexEvent e) {
         subscribedEvents.add(e);
     }
 
-    public void unsubscribe(VertexEvent e) {
-        subscribedEvents.remove(e);
-    }
-
     public List<VertexEvent> getSubscribers() {
-        return new LinkedList<>(subscribedEvents);
+        return Collections.unmodifiableList(subscribedEvents);
     }
 }

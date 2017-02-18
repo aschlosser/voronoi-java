@@ -23,7 +23,7 @@ public class RenderVoronoi extends JFrame{
     public void paint(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
         for (Point site : diagram.getGraph().getSitePoints()) {
-//            g2.fillOval((int) Math.round(site.x-POINT_SIZE/2), size - (int) Math.round(site.y+POINT_SIZE/2) + 32, (int)POINT_SIZE, (int)POINT_SIZE);
+            g2.fillOval((int) Math.round(site.x-POINT_SIZE/2), size - (int) Math.round(site.y+POINT_SIZE/2) + 32, (int)POINT_SIZE, (int)POINT_SIZE);
 //            g2.drawString(String.format("%d,%d", (int)site.x, (int)site.y), (int) site.x, size - (int)site.y + 32);
         }
 
@@ -37,7 +37,7 @@ public class RenderVoronoi extends JFrame{
     public static void main(String[] args) {
         Random r = new Random(9235563856L);
         Stream<Point> gen = Stream.generate(() -> new Point(r.nextDouble() * size, r.nextDouble() * size));
-        Voronoi diagram = new Voronoi(gen.limit(2048).collect(Collectors.toList()));
+        Voronoi diagram = new Voronoi(gen.limit(1024).collect(Collectors.toList()));
 //        assert diagram.getGraph().edgeStream().noneMatch(e -> e.getA() == null && e.getB() == null);
 
         diagram.getGraph().edgeStream().forEach(System.out::println);
