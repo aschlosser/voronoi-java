@@ -3,13 +3,16 @@ package de.alsclo.voronoi;
 import de.alsclo.voronoi.beachline.Beachline;
 import de.alsclo.voronoi.event.Event;
 import de.alsclo.voronoi.event.SiteEvent;
+import de.alsclo.voronoi.graph.Edge;
 import de.alsclo.voronoi.graph.Graph;
 import de.alsclo.voronoi.graph.Point;
+import de.alsclo.voronoi.graph.Vertex;
 import lombok.Getter;
 import lombok.val;
 
-import java.util.Collection;
-import java.util.PriorityQueue;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Voronoi {
 
@@ -38,6 +41,26 @@ public class Voronoi {
             throw new IllegalArgumentException("Site " + p + " lies outside the bounding box.");
         });
         //TODO
+    }
+
+    public Voronoi relax() {
+        Map<Point, Set<Edge>> edges = new HashMap<>();
+        graph.getSitePoints().forEach(p -> edges.put(p, new HashSet<>()));
+        graph.edgeStream().forEach(e -> {
+            edges.get(e.getSite1()).add(e);
+            edges.get(e.getSite2()).add(e);
+        });
+        List<Point> newPoints = graph.getSitePoints().stream().map(site -> {
+            Set<Vertex> vertices = Stream.concat(edges.get(site).stream().map(Edge::getA), edges.get(site).stream().map(Edge::getB)).collect(Collectors.toSet());
+            if (vertices.isEmpty() || vertices.contains(null)) {
+                return site;
+            } else {
+                double avgX = vertices.stream().mapToDouble(v -> v.getLocation().x).average().getAsDouble();
+                double avgY = vertices.stream().mapToDouble(v -> v.getLocation().y).average().getAsDouble();
+                return new Point(avgX, avgY);
+            }
+        }).collect(Collectors.toList());
+        return new Voronoi(newPoints);
     }
 
 }

@@ -37,7 +37,7 @@ public class RenderVoronoi extends JFrame{
     public static void main(String[] args) {
         Random r = new Random(9235563856L);
         Stream<Point> gen = Stream.generate(() -> new Point(r.nextDouble() * size, r.nextDouble() * size));
-        Voronoi diagram = new Voronoi(gen.limit(1024).collect(Collectors.toList()));
+        Voronoi diagram = new Voronoi(gen.limit(1024).collect(Collectors.toList())).relax().relax();
 //        assert diagram.getGraph().edgeStream().noneMatch(e -> e.getA() == null && e.getB() == null);
 
         diagram.getGraph().edgeStream().forEach(System.out::println);
