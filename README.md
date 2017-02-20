@@ -1,6 +1,9 @@
 # voronoi-java [![License](http://img.shields.io/badge/license-MIT-lightgrey.svg?style=flat)][License]
 A lightweight java library for generating 2D Voronoi diagrams using Fortune's Algorithm
 
+## Usage
+At a later point in time voronoi-java will be available on maven central. For the time being just clone the repository and install it into your local maven repository (see [Building from Source](#building-from-source)).
+
 ## Source Code
 The latest source can be found here on [GitHub](https://github.com/aschlosser/voronoi-java). To clone the project:
 
@@ -13,9 +16,6 @@ This project can be built with the _latest_ [Java Development Kit](http://oracle
 
 ## Contributing
 Your help is welcome! Just open a pull request with your changes.
-
-## Usage
-At a later point in time voronoi-java will be available on maven central. For the time being just clone the repository and install it into your local maven repository using `mvn install`.
 
 ## License
 voronoi-java is licensed under the [MIT License][License]. Basically, you can do as you please as long as you include the original copyright notice. Please see the `License.md` file for details.
