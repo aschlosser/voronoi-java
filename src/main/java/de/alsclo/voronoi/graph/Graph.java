@@ -12,19 +12,21 @@ import java.util.stream.Stream;
 public class Graph {
 
     private final BisectorMap edges = new BisectorMap();
-    private final Set<Vertex> vertices = new HashSet<>();
     private final Set<Point> sites = new HashSet<>();
 
     public void addEdge(Edge e) {
         edges.put(e.getSite1(), e.getSite2(), e);
     }
 
+    /**
+     * Gets the edge that bisects the space between the two sites if there is one.
+     *
+     * @param a point of the first site
+     * @param b point of the second site
+     * @return an Optional containing the bisecting edge or an empty Optional if none exist
+     */
     public Optional<Edge> getEdgeBetweenSites(Point a, Point b) {
         return Optional.ofNullable(edges.get(a, b));
-    }
-
-    public void addVertex(Vertex v) {
-        vertices.add(v);
     }
 
     @Override

@@ -9,20 +9,20 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
-public class BisectorMap {
+class BisectorMap {
 
     private final Map<Bisector, Edge> data = new HashMap<>();
 
-    public void put(Point a, Point b, Edge e) {
+    void put(Point a, Point b, Edge e) {
         assert !data.containsKey(new Bisector(a, b));
         data.put(new Bisector(a, b), e);
     }
 
-    public Edge get(Point a, Point b) {
+    Edge get(Point a, Point b) {
         return data.get(new Bisector(a, b));
     }
 
-    public Collection<Edge> values() {
+    Collection<Edge> values() {
         return data.values();
     }
 
@@ -41,7 +41,7 @@ public class BisectorMap {
         return data.hashCode();
     }
 
-    public Stream<Edge> stream() {
+    Stream<Edge> stream() {
         return data.values().stream();
     }
 

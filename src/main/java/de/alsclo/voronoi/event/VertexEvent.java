@@ -57,7 +57,6 @@ public class VertexEvent extends Event {
             c.getSubscribers().forEach(eventQueue::remove);
 
             Vertex v = new Vertex(circle.center);
-            graph.addVertex(v);
             graph.getEdgeBetweenSites(l.getSite(), c.getSite()).get().addVertex(v);
             graph.getEdgeBetweenSites(r.getSite(), c.getSite()).get().addVertex(v);
             Edge e = new Edge(l.getSite(), r.getSite());
