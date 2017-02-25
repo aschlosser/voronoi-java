@@ -1,4 +1,4 @@
-# voronoi-java [![License](http://img.shields.io/badge/license-MIT-lightgrey.svg?style=flat)][License] [![Build Status](http://img.shields.io/travis/aschlosser/voronoi-java.svg?style=flat)](https://travis-ci.org/flow/noise)
+# voronoi-java [![License](http://img.shields.io/badge/license-MIT-lightgrey.svg?style=flat)][License] [![Build Status](http://img.shields.io/travis/aschlosser/voronoi-java.svg?style=flat)](https://travis-ci.org/aschlosser/voronoi-java)
 A lightweight java library for generating 2D Voronoi diagrams using Fortune's Algorithm
 
 ## Usage
