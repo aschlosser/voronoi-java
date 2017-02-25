@@ -4,10 +4,34 @@
 
     <groupId>de.alsclo</groupId>
     <artifactId>voronoi-java</artifactId>
+    <description>A lightweight java library for generating 2D Voronoi diagrams using Fortune's Algorithm</description>
     <packaging>jar</packaging>
     <version>1.0</version>
     <name>voronoi-java</name>
     <url>https://github.com/aschlosser/voronoi-java</url>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://github.com/aschlosser/voronoi-java/blob/master/License.md</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <url>https://github.com/aschlosser/voronoi-java</url>
+        <connection>scm:git:git://github.com/aschlosser/voronoi-java.git</connection>
+        <developerConnection>scm:git:git@github.com:aschlosser/voronoi-java.git</developerConnection>
+    </scm>
+
+    <developers>
+        <developer>
+            <email>aschlosser25@gmail.com</email>
+            <name>Alex Schlosser</name>
+            <url>https://github.com/aschlosser</url>
+            <id>alsclo</id>
+        </developer>
+    </developers>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
