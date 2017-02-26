@@ -2,7 +2,23 @@
 A lightweight java library for generating 2D Voronoi diagrams using Fortune's Algorithm
 
 ## Usage
-At a later point in time voronoi-java will be available on maven central. For the time being just clone the repository and install it into your local maven repository (see [Building from Source](#building-from-source)).
+voronoi-java is available in the central maven repository:
+```
+    <dependency>
+        <groupId>de.alsclo</groupId>
+        <artifactId>voronoi-java</artifactId>
+        <version>1.0</version>
+    </dependency>
+```
+To get the latest version you can just clone the repository and install it into your local maven repository (see [Building from Source](#building-from-source)).
+
+### Getting started
+Use a code snippet like this:
+```
+    Collection<Point> points = ...
+    Voronoi voronoi = new Voronoi(points);
+    voronoi.getGraph();
+```
 
 ## Source Code
 The latest source can be found here on [GitHub](https://github.com/aschlosser/voronoi-java). To clone the project:
