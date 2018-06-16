@@ -58,7 +58,10 @@ public class VertexEvent extends Event {
 
             Vertex v = new Vertex(circle.center);
             graph.getEdgeBetweenSites(l.getSite(), c.getSite()).get().addVertex(v);
-            graph.getEdgeBetweenSites(r.getSite(), c.getSite()).get().addVertex(v);
+            Optional<Edge> rcOE = graph.getEdgeBetweenSites(r.getSite(), c.getSite());
+			if (rcOE.isPresent()) {
+				rcOE.get().addVertex(v);
+			}
             Edge e = new Edge(l.getSite(), r.getSite());
             graph.addEdge(e);
             e.addVertex(v);
