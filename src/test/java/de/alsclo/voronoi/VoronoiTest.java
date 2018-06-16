@@ -74,4 +74,16 @@ public class VoronoiTest {
 
     }
 
+    @Test
+    public void testColinear() {
+    	List<Point> points = new ArrayList<Point>();
+    	for (int x = 0; x <= 4; x +=2) {
+    		for (int y = 0; y <= 4; y+= 2) {
+    			points.add(new Point(x, y));
+    		}
+    	}
+
+        Voronoi diagram = new Voronoi(points);
+    }
+    
 }
